@@ -15,9 +15,10 @@ class MyEmitter extends EventEmitter {
     return super.emit(eventName, ...args);
   }
 }
+
 const myEmitter: MyEmitter = new EventEmitter();
 
-myEmitter.emit(MyEmitterEvents.INVOCATION);
+setImmediate(() => myEmitter.emit(MyEmitterEvents.INVOCATION));
 
 myEmitter.on(MyEmitterEvents.INVOCATION, args => console.log(`invocation happened ${args ? `with args ${args}` : "with no args"}`));
 
