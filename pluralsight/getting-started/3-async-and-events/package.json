@@ -7,7 +7,7 @@
   "scripts": {
     "start-patterns": "npx tsc && node dist/async-patterns",
     "start-patterns-refactored": "npx tsc && node dist/async-patterns-refactored",
-    "start-events": "npx tsc && node dist/event-emitter"
+    "start-events": "npx tsc && node dist/emitting-events"
   },
   "keywords": [],
   "author": "",
