@@ -1,0 +1,18 @@
+{
+  "name": "async-and-events",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start-patterns": "npx tsc && node dist/async-patterns",
+    "start-patterns-refactored": "npx tsc && node dist/async-patterns-refactored",
+    "start-events": "npx tsc && node dist/event-emitter"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^17.0.40"
+  }
+}
