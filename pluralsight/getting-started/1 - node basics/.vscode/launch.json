@@ -6,7 +6,7 @@
         "request": "launch",
         "name": "Launch Program",
         "preLaunchTask": "tsc: build - tsconfig.json",
-        "program": "${workspaceFolder}/Challenge-1-delay.ts",
+        "program": "${workspaceFolder}/Challenge-4-5x-augment-delay.ts",
         "outFiles":["${workspaceFolder}/dist/**/*.js"]
       }
     ]
