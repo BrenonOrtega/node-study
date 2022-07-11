@@ -27,5 +27,10 @@ export class Product implements IProduct {
   imageSource: string;
   showImage: boolean;
 
-  isAvailable = () => this.available ? "On Stock" : "Out of Order"
+  isAvailable = (): string => this.available ? "On Stock" : "Out of Order";
+}
+
+class otherProduct extends Product { 
+  override isAvailable = () => this.available ? "No Itens on stock" : "Out of Order";
+
 }
