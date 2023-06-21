@@ -1,4 +1,4 @@
-import contactsRepository from '../Repositories/ContactsRepository.js';
+import contactsRepository from '../repositories/ContactsRepository.js';
 
 class ContactController {
   constructor(contactsRepo) {

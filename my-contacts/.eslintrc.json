@@ -14,6 +14,7 @@
     "linebreak-style": "off",
     "arrow-parens":"off",
     "import/extensions": "off",
-    "no-promise-executor-return": "off"
+    "no-promise-executor-return": "off",
+    "object-curly-newline":"off"
   }
 }

@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - DB_EXTENSIONS=uuid-ossp
+    volumes:
+      - C:\coding\concepts\node\my-contacts\database:/docker-entrypoint-initdb.d:rw
+      - db:/var/lib/postgresql/data:rw
+    networks:
+      - my-contacts-network
+    ports:
+      - "5432:5432"
+
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+    networks:
+      - my-contacts-network
+    depends_on:
+      - db
+
+networks:
+  my-contacts-network:
+    driver: bridge
+
+volumes:
+  db:

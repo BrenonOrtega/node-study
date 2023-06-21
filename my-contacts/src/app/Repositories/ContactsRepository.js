@@ -1,52 +1,100 @@
-import { v4 as uuidv4 } from 'uuid';
+import db from '../infrastructure/database/index.js';
 
-const getNewId = () => uuidv4();
-let contacts = [
-  {
-    id: getNewId(),
-    name: 'bryan',
-    phone: 12945934443,
-    email: 'bryan@mail.com',
-  },
-  {
-    id: getNewId(),
-    name: 'bah',
-    phone: 34624740716,
-    email: 'bah@mail.com',
-  },
-];
+const SELECT_QUERY = 'SELECT contacts.id, contacts.name, contacts.phone, contacts.email, categories.name as categoryName, categories.id as categoryId';
 
 class ContactRepository {
+  constructor(database) {
+    if (!database) throw new Error('database cannot be null or undefined.');
+
+    this.db = database;
+  }
+
   async getAll() {
-    return contacts;
+    const { rows } = await this.db.query(
+      `${SELECT_QUERY}
+      FROM contacts
+      LEFT JOIN categories ON categories.id = contacts.categoryId;`,
+    );
+
+    return rows.map(row => ({ ...row }));
   }
 
   async getById(id) {
-    return contacts.find(contact => contact.id === id);
+    const values = [id];
+    const { rows } = await this.db.query(`
+      ${SELECT_QUERY}
+      FROM contacts
+      LEFT JOIN categories ON categories.id = contacts.categoryId
+      WHERE contacts.id = $1`, values);
+
+    const mapped = rows.map(row => ({ ...row }));
+    return mapped[0];
   }
 
   async getByEmail(email) {
-    return contacts.find(contact => contact.email === email);
+    const values = [email];
+    const { rows } = await this.db.query(`
+      ${SELECT_QUERY}
+      FROM contacts
+      LEFT JOIN categories ON categories.id = contacts.categoryId
+      WHERE contacts.email = $1`, values);
+
+    const [mapped] = rows.map(row => ({ ...row }));
+    return mapped;
   }
 
-  async add(newContact) {
-    const contact = { id: getNewId(), ...newContact };
+  async add({ name, email, phone, categoryId }) {
+    const contact = {
+      name,
+      phone,
+      email,
+      categoryId,
+    };
 
-    contacts.push(contact);
+    const query = await this.db.query(
+      `INSERT INTO contacts (name, phone, email, categoryId)
+      VALUES ($1, $2, $3, $4)
+      RETURNING id;`,
+      Object.values(contact),
+    );
 
-    return contact;
+    const [queried] = query.rows;
+    if (queried) {
+      const { id } = queried;
+      return { success: true, contact: { id, ...contact } };
+    }
+
+    return { success: false, contact: {} };
   }
 
-  async update(contact) {
-    contacts = contacts.map(c => (c.id === contact.id ? contact : c));
-    return contact;
+  async update({ name, email, phone, categoryId, id }) {
+    const { rows } = await db.query(
+      `UPDATE contacts
+       SET name = $1, email=$2, phone=$3, categoryId=$4
+       WHERE id = $5`,
+      [name, email, phone, categoryId, id],
+    );
+
+    const [update] = rows;
+    return update;
   }
 
   async delete(id) {
-    contacts = contacts.filter(element => element.id === id);
-    return true;
+    const deleteOperation = await db.query('DELETE FROM contacts where id = $1', [id]);
+    return deleteOperation;
+  }
+
+  async exists({ propertyName, value }) {
+    const { rows } = await db.query(
+      'SELECT 1 FROM contacts WHERE $1 = $2',
+      [propertyName, value],
+    );
+
+    const [exists] = rows;
+
+    return Boolean(exists);
   }
 }
 
-const contactsRepository = new ContactRepository();
+const contactsRepository = new ContactRepository(db);
 export default contactsRepository;
