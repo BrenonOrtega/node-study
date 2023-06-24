@@ -4,11 +4,9 @@
   "main": "src/index.js",
   "license": "MIT",
   "scripts": {
-    "build": "babel src/index.js -o build/index.js && webpack",
-    "build:dev": "webpack --mode=development",
-    "build:prod": "webpack --mode=production --node-env=production",
-    "watch": "webpack --watch",
-    "serve": "webpack serve"
+    "build": "webpack",
+    "dev": "webpack serve --config webpack.config.cjs --mode development",
+    "build:prod": "webpack --mode=production --node-env=production"
   },
   "devDependencies": {
     "@babel/cli": "^7.22.5",
@@ -32,8 +30,10 @@
   "dependencies": {
     "clean-webpack-plugin": "^4.0.0",
     "html-webpack-plugin": "^5.5.3",
+    "prop-types": "^15.8.1",
     "react": "^18.0.*",
-    "react-dom": "^18.0.*"
+    "react-dom": "^18.0.*",
+    "react-scripts": "^5.0.1"
   },
   "description": "My webpack project"
 }
