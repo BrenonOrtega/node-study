@@ -6,7 +6,6 @@ import { articlesSeed } from './articlesSeed';
 import { appendItem, sum, getNewId, filterById } from './Functions';
 import { createAction } from './Functions/createActions';
 
-
 const actions = {
   refreshArticles: createAction('refreshArticles', appendItem),
   removeArticle: createAction('removeArticle', filterById),
@@ -20,12 +19,12 @@ const reducer = createReducerFor(actions);
 const App = () => {
   const [ state, dispatch ] = useReducer(reducer, { articles: articlesSeed, childrenContent: '', count: 0 });
 
-  const handleRefreshArticle = 
+  const handleRefreshArticle =
     () => dispatch({ action: actions.refreshArticles, key: 'articles', value: createArticle(state.articles.length) });
 
   const handleIncreaseClick = () => dispatch({ action: actions.increaseCount, key: 'count', value: 1 });
 
-  const receiveContentChanged =(received) => dispatch({ action: actions.childrenContent, key: 'childrenContent', value: received });
+  const receiveContentChanged = (received) => dispatch({ action: actions.childrenContent, key: 'childrenContent', value: received });
 
   const handleRemoveArticle = (articleId) => dispatch({ action: actions.removeArticle, key: 'articles', value: articleId });
 
@@ -54,6 +53,7 @@ const App = () => {
 
 export default App;
 
+// TODO - Remove this.
 function createArticle(length) {
   return {
     id: getNewId(),
