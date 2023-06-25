@@ -1,49 +1,60 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useReducer, } from "react";
 import BlogArticle from './Components/BlogArticle';
-import Second from './Header'
+import Header from './Header'
+import createReducerFor from './Functions/createReducer';
+import { articlesSeed } from './articlesSeed';
+import { appendItem, sum, } from './Functions';
 
-const App = () => {
-  const [ count, useCount ] = useState(0);
-  const [ childrenContent, setChildrenContent ] = useState('');
-
-  const receiveContentChanged = (received) => setChildrenContent(received);
-
-  return (
-    <Fragment key="fragment">
-      <Second title="My blog articles" content={childrenContent} >
-        <h4>Im the children subtitle</h4>
-        <h5>childrenContent</h5>
-      </Second>
-
-      <button onClick={() => useCount(count + 1)}>Clicked {count} times</button>
-
-      {articles.map(article =>
-        <BlogArticle
-          key={article.title}
-          title={article.title}
-          subtitle={article.subtitle}
-          content={article.content}
-          onContentChanged={receiveContentChanged}
-        />)
-      }
-    </Fragment>
-  );
+const actions = {
+  refresh: 'refreshArticles',
+  childrenContent: 'receiveChildrenContent',
+  increaseCount: 'increaseCount'
 };
 
-const articles = [
-  {
-    title: "Como ficar monstro em 15 dias",
-    subtitle: "Ficar monstrao, 15 dias, rapidin",
-    content: "eeeeeeeeeeeu, parado no bailao UUUH no bailao, ela com o popozao"
-  }, {
-    title: "Lukinha da 17 e a lenda do morro",
-    subtitle: "Era so mais um silva que a estrela nao brilha",
-    content: "ele era funkeiro mas era pai de familia"
-  }, {
-    title: "Ursinhos Cariani",
-    subtitle: "eu treino vc, vc me treina, somos uma familia feliz",
-    content: "com um forte abraco e um grande beijo meu, meu treininho eh pra, vo, ce"
-  },
-];
+const reducer = createReducerFor(actions);
+
+const App = () => {
+  const [ state, dispatch ] = useReducer(reducer, { articles: articlesSeed, childrenContent: '', count: 0 });
+
+  const handleRefreshArticle = () => {
+    const length = state.articles.length;
+    dispatch({ action: actions.childrenContent, key: 'articles', value: createArticle(length), applyTransform: appendItem, });
+  };
+
+  const handleIncreaseClick =
+    () => dispatch({ action: actions.increaseCount, key: 'count', value: 1, applyTransform: sum });
+
+  const receiveContentChanged =
+    (received) => dispatch({ action: actions.childrenContent, key: 'childrenContent', value: received });
+
+  return <Fragment key="fragment">
+    <Header title="My blog articles" content={state.childrenContent} >
+      <h4>Im the children subtitle</h4>
+      <h5>{state.childrenContent}</h5>
+    </Header>
+
+    <button onClick={handleIncreaseClick}>Clicked {state.count} times
+    </button>
+    <button onClick={handleRefreshArticle}>Refresh Articles</button>
+
+    {state.articles.map(article =>
+      <BlogArticle
+        key={article.title}
+        title={article.title}
+        subtitle={article.subtitle}
+        content={article.content}
+        onContentChanged={receiveContentChanged}
+      />)
+    }
+  </Fragment>;
+};
 
 export default App;
+
+function createArticle(length) {
+  return {
+    title: `Article number ${length}`,
+    subtitle: `SubArticle#${length}`,
+    content: "eeeeeeeeeeeu, parado no bailao UUUH no bailao, ela com o popozao"
+  };
+}
