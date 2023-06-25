@@ -1,0 +1,1 @@
+export const createAction = (name, applyTransform) => ({name, applyTransform});
