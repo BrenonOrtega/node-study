@@ -1,7 +1,8 @@
-import React, { Fragment, useReducer, } from "react";
+import React, { Fragment, useReducer, useState } from "react";
 import BlogArticle from './Components/BlogArticle';
-import Header from './Header'
+import Header from './Components/Header'
 import createReducerFor from './Functions/createReducer';
+import Button from './Components/Button';
 import { articlesSeed } from './articlesSeed';
 import { appendItem, sum, getNewId, filterById } from './Functions';
 import { createAction } from './Functions/createActions';
@@ -11,7 +12,6 @@ const actions = {
   removeArticle: createAction('removeArticle', filterById),
   childrenContent: createAction('receiveChildrenContent'),
   increaseCount: createAction('increaseCount', sum),
-
 };
 
 const reducer = createReducerFor(actions);
@@ -28,14 +28,16 @@ const App = () => {
 
   const handleRemoveArticle = (articleId) => dispatch({ action: actions.removeArticle, key: 'articles', value: articleId });
 
+  const [ theme, setTheme ] = useState('dark');
+
   return <Fragment key="fragment">
-    <Header title="My blog articles" content={state.childrenContent} >
+    <Header title="My blog articles" content={state.childrenContent} theme={theme} themeChanged={setTheme}>
       <h4>Im the children subtitle</h4>
       <h5>{state.childrenContent}</h5>
     </Header>
 
-    <button onClick={handleIncreaseClick}>Clicked {state.count} times</button>
-    <button onClick={handleRefreshArticle}>Refresh Articles</button>
+    <Button theme={theme} onClick={handleIncreaseClick}>Clicked {state.count} times</Button>
+    <Button theme={theme} onClick={handleRefreshArticle}>Refresh Articles</Button>
 
     {state.articles.map(article =>
       <BlogArticle
@@ -46,6 +48,7 @@ const App = () => {
         content={article.content}
         onContentChanged={receiveContentChanged}
         onRemoveArticle={handleRemoveArticle}
+        theme={theme}
       />)
     }
   </Fragment>;
