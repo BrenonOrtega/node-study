@@ -1,5 +1,5 @@
 const createReducerFor = (enabledActions) =>
-  (state, { action, key, value }) => {
+  (state, { action, key, value, applyTransform }) => {
     const existingActions = Object.values(enabledActions);
 
     if (!existingActions.includes(action)) {
