@@ -3,7 +3,7 @@ import propTypes from 'prop-types';
 import ArticleHeader from './ArticleHeader';
 import Button from './Button';
 
-const BlogArticle = ({ id, title, subtitle, content, children, onContentChanged, onRemoveArticle, theme }) => {
+const BlogArticle = ({ id, title, subtitle, content, children, onContentChanged, onRemoveArticle }) => {
   
   const [ newContent, setNewContent ] = useState('');
   const handleContentButtonClick = () => setNewContent(`${title} content has been clicked`);
@@ -22,10 +22,9 @@ const BlogArticle = ({ id, title, subtitle, content, children, onContentChanged,
         onClick={handleRemoveButtonClick}
         content={content}
         newContent={newContent}
-        theme={theme}
       >
       </ArticleHeader>
-      <Button theme={theme} onClick={handleContentButtonClick}>Click for new content</Button>
+      <Button onClick={handleContentButtonClick}>Click for new content</Button>
       <hr></hr>
       {children}
     </article>
@@ -38,8 +37,7 @@ BlogArticle.propTypes = {
   subtitle: propTypes.string.isRequired,
   content: propTypes.string.isRequired,
   onContentChanged: propTypes.func,
-  onRemoveArticle: propTypes.func,
-  theme: propTypes.oneOf(['dark', 'light']).isRequired
+  onRemoveArticle: propTypes.func
 };
 
 export default BlogArticle;
